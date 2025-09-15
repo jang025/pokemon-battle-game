@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pokémon Battle</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="stage">
+      <header class="title">Pokémon Battle</header>
+
+      <section class="battle-top">
+        <!-- Enemy card -->
+        <article class="card enemy">
+          <div class="pokemon-row">
+            <div class="meta">
+              <div class="name">Enemy Pokémon</div>
+              <small>Type</small>
+              <div class="hp-bar"><div class="hp-fill"></div></div>
+              <div class="hp-text">HP: -- / --</div>
+            </div>
+            <div class="sprite">IMG</div>
+          </div>
+        </article>
+
+        <!-- Player card -->
+        <article class="card player">
+          <div class="pokemon-row">
+            <div class="sprite">IMG</div>
+            <div class="meta">
+              <div class="name">Player Pokémon</div>
+              <small>Type</small>
+              <div class="hp-bar"><div class="hp-fill"></div></div>
+              <div class="hp-text">HP: -- / --</div>
+            </div>
+          </div>
+
+          <div class="controls">
+            <div class="moves">
+              <button class="move">Move 1</button>
+              <button class="move">Move 2</button>
+              <button class="move">Move 3</button>
+              <button class="move">Move 4</button>
+            </div>
+
+            <div class="actions">
+              <button class="btn">Switch</button>
+              <button class="btn">Run</button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="log">Battle log area</div>
+        <div class="footer">
+          <div class="note">Footer / Notes</div>
+          <div>Turn: --</div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

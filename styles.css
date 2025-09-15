@@ -1,179 +1,215 @@
+/* ===== VARIABLES & BASE ===== */
 :root {
   --bg: #0b1220;
   --card: #0b1721;
   --panel: #0f1724;
   --accent: #6ee7b7;
   --muted: #9aa4b2;
+  --btn-bg: #1f2a38;
+  --btn-hover: #293645;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
+    Roboto, Arial, sans-serif;
 }
+
 * {
   box-sizing: border-box;
-}
-html,
-body {
-  height: 100%;
-}
-body {
   margin: 0;
-  min-height: 100vh;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
   background: linear-gradient(180deg, #041028 0%, var(--bg) 100%);
   color: #ecf0f6;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 28px;
-}
-
-.stage {
-  width: 980px;
-  max-width: 96vw;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.02),
-    rgba(0, 0, 0, 0.12)
-  );
-  border-radius: 14px;
+  font-size: 14px;
   padding: 20px;
-  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.6);
-}
-.title {
-  font-weight: 700;
-  font-size: 18px;
-  margin-bottom: 12px;
 }
 
+/* ===== MAIN CONTAINERS ===== */
+main {
+  width: 100%;
+  max-width: 960px;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+}
+
+/* ===== HEADERS ===== */
+.selection-title,
+.battle-title,
+.result-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* ===== POKEMON SELECTION SCREEN ===== */
+
+.pokemon-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  gap: 16px; /* space between cards */
+  margin-top: 16px;
+}
+
+.pokemon-card {
+  background: #162133;
+  border-radius: 10px;
+  text-align: center;
+  padding: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, border 0.2s;
+  border: 2px solid transparent;
+}
+
+.pokemon-card:hover {
+  transform: scale(1.05);
+  border: 2px solid var(--accent);
+}
+
+.pokemon-sprite img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 8px;
+}
+
+.selection-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.btn {
+  background: var(--btn-bg);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn:hover {
+  background: var(--btn-hover);
+}
+/* ===== POKEMON BATTLE SCREEN ===== */
+.battle-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 500px;
+  padding: 20px;
+}
+
+/* Top opponent section */
 .battle-top {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 18px;
+  justify-content: flex-end; /* moves opponent to top-right */
+  height: 180px;
 }
+
+/* Bottom player section */
+.battle-bottom {
+  display: flex;
+  flex-direction: column; /* stack player + moves */
+  gap: 16px;
+  padding-bottom: 16px;
+}
+
+/* Cards */
 .card {
-  background: var(--card);
-  padding: 14px;
+  background: #162133;
   border-radius: 12px;
-  flex: 1;
-  min-width: 0;
+  padding: 8px;
+  margin: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
 }
-.card.enemy {
-  transform: translateY(-6px);
-}
+
+/* Pokémon row inside card */
 .pokemon-row {
   display: flex;
   align-items: center;
   gap: 12px;
 }
-.sprite {
-  width: 96px;
-  height: 96px;
-  border-radius: 8px;
-  background: linear-gradient(180deg, #fff2 0%, #fff0 50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.7);
-}
-.meta {
-  flex: 1;
-  min-width: 0;
-}
-.name {
-  font-weight: 700;
-  font-size: 18px;
-}
-.meta small {
-  color: var(--muted);
-  display: block;
-  font-size: 12px;
-  margin-top: 6px;
+
+/* Pokémon sprite */
+.pokemon-sprite img {
+  width: 120px;
+  height: 120px;
 }
 
-.hp-bar {
-  height: 12px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 999px;
-  margin-top: 10px;
-  overflow: hidden;
-}
-.hp-fill {
-  height: 100%;
-  width: 80%;
-  background: linear-gradient(90deg, var(--accent), #34d399);
-}
-.hp-text {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 6px;
-}
-
-.controls {
-  display: flex;
-  gap: 12px;
-  margin-top: 18px;
-}
+/* Move buttons */
 .moves {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
 }
-button.move {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.02),
-    rgba(255, 255, 255, 0.01)
-  );
-  border: 1px solid rgba(255, 255, 255, 0.04);
+
+.move {
+  background: var(--btn-bg);
+  border: none;
   padding: 10px;
   border-radius: 8px;
   font-weight: 600;
-  cursor: default;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
+.move:hover {
+  background: var(--accent);
+}
+
+/* Battle log */
 .panel {
-  margin-top: 16px;
-  padding: 12px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.01),
-    rgba(0, 0, 0, 0.08)
-  );
+  background: var(--panel);
   border-radius: 10px;
-}
-.log {
-  height: 140px;
-  overflow: auto;
+  padding: 12px;
+  max-height: 140px;
+  overflow-y: auto;
   font-size: 13px;
   color: var(--muted);
-  padding-right: 6px;
-}
-.footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 14px;
-  color: var(--muted);
-  font-size: 13px;
-}
-.btn {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 8px 12px;
-  border-radius: 8px;
-  cursor: default;
 }
 
+/* ===== RESULT SCREEN ===== */
+.result-screen .result-message {
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.result-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* ===== MEDIA QUERIES ===== */
 @media (max-width: 640px) {
   .battle-top {
     flex-direction: column;
+    gap: 12px;
   }
-  .sprite {
-    width: 76px;
-    height: 76px;
+
+  .pokemon-card {
+    width: 100px;
   }
-  .moves {
-    grid-template-columns: repeat(2, 1fr);
+
+  .pokemon-sprite img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .battle-bottom .moves {
+    grid-template-columns: 1fr 1fr;
   }
 }

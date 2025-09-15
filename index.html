@@ -7,58 +7,162 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="stage">
-      <header class="title">Pokémon Battle</header>
+    <!-- Pokemon Selection Screen  -->
+    <main class="selection-screen">
+      <header class="selection-title">Select Your Pokémon</header>
 
+      <section class="pokemon-list">
+        <article class="pokemon-card">
+          <div class="pokemon-sprite">
+            <img
+              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
+              alt="Bulbasaur"
+            />
+          </div>
+          <div class="name">Bulbasaur</div>
+        </article>
+        <article class="pokemon-card">
+          <div class="pokemon-sprite">
+            <img
+              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
+              alt="Bulbasaur"
+            />
+          </div>
+          <div class="name">Bulbasaur</div>
+        </article>
+        <article class="pokemon-card">
+          <div class="pokemon-sprite">
+            <img
+              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
+              alt="Bulbasaur"
+            />
+          </div>
+          <div class="name">Bulbasaur</div>
+        </article>
+        <article class="pokemon-card">
+          <div class="pokemon-sprite">
+            <img
+              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
+              alt="Bulbasaur"
+            />
+          </div>
+          <div class="name">Bulbasaur</div>
+        </article>
+        <article class="pokemon-card">
+          <div class="pokemon-sprite">
+            <img
+              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
+              alt="Bulbasaur"
+            />
+          </div>
+          <div class="name">Bulbasaur</div>
+        </article>
+        <article class="pokemon-card">
+          <div class="pokemon-sprite">
+            <img
+              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
+              alt="Bulbasaur"
+            />
+          </div>
+          <div class="name">Bulbasaur</div>
+        </article>
+        <article class="pokemon-card">
+          <div class="pokemon-sprite">
+            <img
+              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
+              alt="Bulbasaur"
+            />
+          </div>
+          <div class="name">Bulbasaur</div>
+        </article>
+        <article class="pokemon-card">
+          <div class="pokemon-sprite">
+            <img
+              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
+              alt="Bulbasaur"
+            />
+          </div>
+          <div class="name">Bulbasaur</div>
+        </article>
+      </section>
+
+      <div class="selection-actions">
+        <button class="btn confirm">Confirm</button>
+        <button class="btn cancel">Cancel</button>
+      </div>
+    </main>
+    <!-- Pokemon Battle Screen -->
+    <main class="battle-screen">
+      <header class="battle-title">Pokémon Battle</header>
+      <!-- Oppponent Pokemon-->
       <section class="battle-top">
-        <!-- Enemy card -->
-        <article class="card enemy">
+        <article class="card opponent">
           <div class="pokemon-row">
-            <div class="meta">
-              <div class="name">Enemy Pokémon</div>
-              <small>Type</small>
-              <div class="hp-bar"><div class="hp-fill"></div></div>
-              <div class="hp-text">HP: -- / --</div>
+            <div class="pokemon-sprite">
+              <img
+                src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
+                alt="Bulbasaur"
+              />
             </div>
-            <div class="sprite">IMG</div>
+            <div class="pokemon-data">
+              <div class="name">Bulbasaur</div>
+              <div class="hp-bar">
+                <div class="hp-fill" style="width: 80%"></div>
+              </div>
+              <div class="hp-text">HP: 80 / 100</div>
+            </div>
           </div>
         </article>
-
-        <!-- Player card -->
+      </section>
+      <!-- Player Pokemon-->
+      <section class="battle-bottom">
         <article class="card player">
           <div class="pokemon-row">
-            <div class="sprite">IMG</div>
-            <div class="meta">
-              <div class="name">Player Pokémon</div>
-              <small>Type</small>
-              <div class="hp-bar"><div class="hp-fill"></div></div>
-              <div class="hp-text">HP: -- / --</div>
+            <div class="pokemon-sprite">
+              <img
+                src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
+                alt="Bulbasaur"
+              />
             </div>
-          </div>
-
-          <div class="controls">
-            <div class="moves">
-              <button class="move">Move 1</button>
-              <button class="move">Move 2</button>
-              <button class="move">Move 3</button>
-              <button class="move">Move 4</button>
-            </div>
-
-            <div class="actions">
-              <button class="btn">Switch</button>
-              <button class="btn">Run</button>
+            <div class="pokemon-data">
+              <div class="name">Bulbasaur</div>
+              <div class="hp-bar">
+                <div class="hp-fill" style="width: 80%"></div>
+              </div>
+              <div class="hp-text">HP: 80 / 100</div>
             </div>
           </div>
         </article>
+
+        <div class="moves">
+          <button class="move">Tackle</button>
+          <button class="move">Vine Whip</button>
+          <button class="move">Growl</button>
+          <button class="move">Leech Seed</button>
+        </div>
       </section>
 
       <section class="panel">
-        <div class="log">Battle log area</div>
-        <div class="footer">
-          <div class="note">Footer / Notes</div>
-          <div>Turn: --</div>
+        <div class="log">
+          <p>Player used Tackle!</p>
+          <p>Enemy lost 10 HP.</p>
         </div>
       </section>
+    </main>
+    <!-- Fainted / Winner Screen -->
+    <main class="result-screen">
+      <header class="result-title">Battle Result</header>
+
+      <section class="result-message">
+        <p>Player's Pokémon fainted!</p>
+        <!-- OR -->
+        <p>Player Wins!</p>
+      </section>
+
+      <div class="result-actions">
+        <button class="btn replay">Replay</button>
+        <button class="btn new-game">New Game</button>
+      </div>
     </main>
   </body>
 </html>

@@ -218,11 +218,11 @@ const applyMove = function (attacker, defender, moveIndex) {
   return { damage, move };
 };
 
-function logStatus() {
+const logStatus = function () {
   console.log(
     `Player HP: ${playerPokemon.hp}, Opponent HP: ${opponentPokemon.hp}`
   );
-}
+};
 
 /*------------------------------ Game setup and battle loop -----------------*/
 playerPokemon = createPokemon(charizard);

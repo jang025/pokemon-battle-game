@@ -18,31 +18,38 @@
 }
 
 body {
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(180deg, #041028 0%, var(--bg) 100%);
   color: #ecf0f6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: 14px;
-  padding: 20px;
+  padding: 0;
 }
 
 /* ===== MAIN CONTAINERS ===== */
 main {
+  position: absolute; /* allow stacking */
+  top: 0;
+  left: 0;
   width: 100%;
-  max-width: 960px;
+  min-height: 100vh;
   background: var(--card);
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  transition: opacity 0.3s ease; /* optional smooth fade */
+  z-index: 1; /* all screens on same layer by default */
 }
 
 /* ===== HEADERS ===== */
 .selection-title,
 .battle-title,
 .result-title {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
   margin-bottom: 16px;
   text-align: center;
@@ -50,11 +57,18 @@ main {
 
 /* ===== POKEMON SELECTION SCREEN ===== */
 
+main.selection-screen {
+  padding: 40px;
+}
+
 .pokemon-list {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4 columns */
-  gap: 16px; /* space between cards */
+  gap: 24px; /* space between cards */
+  width: 100%;
+  flex-grow: 1;
   margin-top: 16px;
+  margin-bottom: 8px;
 }
 
 .pokemon-card {
@@ -65,11 +79,12 @@ main {
   cursor: pointer;
   transition: transform 0.2s, border 0.2s;
   border: 2px solid transparent;
-}
 
-.pokemon-card:hover {
-  transform: scale(1.05);
-  border: 2px solid var(--accent);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 160px;
 }
 
 .pokemon-sprite img {
@@ -81,8 +96,8 @@ main {
 .selection-actions {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  margin-top: 16px;
+  gap: 48px;
+  margin-top: 24px;
 }
 
 .btn {
@@ -99,13 +114,26 @@ main {
 .btn:hover {
   background: var(--btn-hover);
 }
+
+.btn.cancel,
+.btn.confirm {
+  padding: 14px 28px;
+  font-size: 16px;
+}
+
+.pokemon-card.selected {
+  border: 2px solid var(--accent);
+  transform: scale(1.05);
+}
+
 /* ===== POKEMON BATTLE SCREEN ===== */
 .battle-screen {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 500px;
+  height: 100vh; /* take full viewport height */
   padding: 20px;
+  z-index: 2; /* ensures battle screen is on top when visible */
 }
 
 /* Top opponent section */
@@ -191,6 +219,10 @@ main {
   display: flex;
   justify-content: center;
   gap: 12px;
+}
+
+.hide {
+  display: none;
 }
 
 /* ===== MEDIA QUERIES ===== */

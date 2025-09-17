@@ -5,85 +5,85 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Pokémon Battle</title>
     <link rel="stylesheet" href="styles.css" />
-    <script src="app.js" defer></script>
+    <script type="module" src="app.js" defer></script>
   </head>
   <body>
     <!-- Pokemon Selection Screen  -->
     <main class="selection-screen">
-      <header class="selection-title">Select Your Pokémon</header>
+      <header class="selection-title">Select Player Pokémon</header>
 
       <section class="pokemon-list">
         <article class="pokemon-card">
           <div class="pokemon-sprite">
             <img
-              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
-              alt="Bulbasaur"
+              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/venusaur.png"
+              alt="venusaur"
             />
           </div>
-          <div class="name">Bulbasaur</div>
+          <div class="name">venusaur</div>
         </article>
         <article class="pokemon-card">
           <div class="pokemon-sprite">
             <img
-              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
-              alt="Bulbasaur"
+              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/charizard.png"
+              alt="charizard"
             />
           </div>
-          <div class="name">Bulbasaur</div>
+          <div class="name">charizard</div>
         </article>
         <article class="pokemon-card">
           <div class="pokemon-sprite">
             <img
-              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
-              alt="Bulbasaur"
+              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/blastoise.png"
+              alt="blastoise"
             />
           </div>
-          <div class="name">Bulbasaur</div>
+          <div class="name">blastoise</div>
         </article>
         <article class="pokemon-card">
           <div class="pokemon-sprite">
             <img
-              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
-              alt="Bulbasaur"
+              src="https://img.pokemondb.net/sprites/home/normal/alakazam.png"
+              alt="alakazam"
             />
           </div>
-          <div class="name">Bulbasaur</div>
+          <div class="name">alakazam</div>
         </article>
         <article class="pokemon-card">
           <div class="pokemon-sprite">
             <img
-              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
-              alt="Bulbasaur"
+              src="https://img.pokemondb.net/sprites/home/normal/machamp.png"
+              alt="machamp"
             />
           </div>
-          <div class="name">Bulbasaur</div>
+          <div class="name">machamp</div>
         </article>
         <article class="pokemon-card">
           <div class="pokemon-sprite">
             <img
-              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
-              alt="Bulbasaur"
+              src="https://img.pokemondb.net/sprites/home/normal/gengar.png"
+              alt="gengar"
             />
           </div>
-          <div class="name">Bulbasaur</div>
+          <div class="name">gengar</div>
         </article>
         <article class="pokemon-card">
           <div class="pokemon-sprite">
             <img
-              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
-              alt="Bulbasaur"
+              src="https://img.pokemondb.net/sprites/home/normal/aggron.png"
+              alt="aggron"
             />
           </div>
-          <div class="name">Bulbasaur</div>
+          <div class="name">aggron</div>
         </article>
         <article class="pokemon-card">
           <div class="pokemon-sprite">
             <img
-              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png"
-              alt="Bulbasaur"
+              src="https://img.pokemondb.net/sprites/scarlet-violet/normal/salamence.png"
+              alt="salamence"
             />
           </div>
-          <div class="name">Bulbasaur</div>
+          <div class="name">salamence</div>
         </article>
       </section>
 
@@ -93,7 +93,7 @@
       </div>
     </main>
     <!-- Pokemon Battle Screen -->
-    <main class="battle-screen">
+    <main class="battle-screen hide">
       <header class="battle-title">Pokémon Battle</header>
       <!-- Oppponent Pokemon-->
       <section class="battle-top">
@@ -151,7 +151,7 @@
       </section>
     </main>
     <!-- Fainted / Winner Screen -->
-    <main class="result-screen">
+    <main class="result-screen hide">
       <header class="result-title">Battle Result</header>
 
       <section class="result-message">

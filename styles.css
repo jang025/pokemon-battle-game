@@ -221,6 +221,25 @@ main.selection-screen {
   cursor: not-allowed;
 }
 
+/* The container of the HP bar */
+.hp-bar {
+  width: 200px; /* total HP bar width */
+  height: 20px; /* fixed height */
+  background-color: red; /* empty bar background */
+  border: 2px solid #000;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* The actual HP fill inside */
+.hp-fill {
+  height: 100%; /* always full height */
+  width: 100%; /* start full, shrinks via JS */
+  background-color: green; /* current HP */
+  transition: width 0.3s ease; /* smooth animation when HP changes */
+}
+
 /* ===== RESULT SCREEN ===== */
 .result-screen .result-message {
   text-align: center;

@@ -62,11 +62,13 @@ const newGameBtn = document.querySelector(".result-actions .new-game");
 //A deep copy of an object is a copy whose properties do not share the same references
 // (point to the same underlying values) as those of the source object from which the copy was made.
 // structuredClone --> deep clone of the pokemon object
-// This clone is a deep copy, so modifying playerPokemon won’t affect the original pokemon object
+// This clone is a deep copy, so modifying playerPokemon and opponentPokemon won’t affect the original pokemon object
+//! create deep clone of pokemon object so as to not mutate the original pokemon object
 const createPokemon = function (pokemon) {
   return structuredClone(pokemon);
 };
 
+//! function to select pokemon
 const handlePokemonSelection = function (event) {
   // select the pokemon card you attached the listener to so must use currentTarget
   const selectedCard = event.currentTarget;
@@ -85,6 +87,7 @@ const handlePokemonSelection = function (event) {
     : null;
 };
 
+//! function for cancel button
 const handleCancelSelection = function () {
   if (selectedPokemonCard) {
     // remove selected pokemon
@@ -93,6 +96,7 @@ const handleCancelSelection = function () {
   }
 };
 
+//! function for confirm button
 const handleConfirmSelection = function () {
   // no pokemon selected
   if (!selectedPokemonCard) return;
@@ -123,7 +127,7 @@ const handleConfirmSelection = function () {
   }
 };
 
-//todo start up battle
+//todo start up battle after pressing the confirm button
 const setUpBattle = function (playerPokemon, opponentPokemon) {
   // Store max HP
   if (!playerPokemon.maxHp) playerPokemon.maxHp = playerPokemon.hp;
@@ -160,22 +164,23 @@ const setUpBattle = function (playerPokemon, opponentPokemon) {
       ? `${playerPokemon.name} is faster! You go first!`
       : `${opponentPokemon.name} is faster! Opponent goes first!`
   );
-  // disable moves if opp turn || enable moves if player turn
+  // disable moves if opp start first  OR  enable moves if player start first
   setMoveButtonsState(playerTurn);
 
   // opponent turn (delay of 3s)
   if (!playerTurn) setTimeout(opponentTurn, 3000);
 };
 
-// Add message to battle log
+//! utility function -->  Add message to battle logs
 const addBattleLog = function (msg) {
   const p = document.createElement("p");
   p.textContent = msg;
   battleLog.appendChild(p);
+  //forces the scrollbar to jump to the bottom — ensuring the latest message is always visible
   battleLog.scrollTop = battleLog.scrollHeight;
 };
 
-// Update HP bars dynamically
+//! Helper function -->  Update HP bars dynamically
 const updateHpBars = function () {
   playerHpFill.style.width = `${
     (playerPokemon.hp / playerPokemon.maxHp) * 100
@@ -188,7 +193,7 @@ const updateHpBars = function () {
   opponentHpText.textContent = `${opponentPokemon.hp} / ${opponentPokemon.maxHp}`;
 };
 
-// Enable/disable move buttons
+//! Helper function -->  Enable/disable move buttons
 const setMoveButtonsState = function (enabled) {
   moveButtons.forEach((btn, i) => {
     btn.disabled = playerPokemon.moves[i].usage <= 0;
@@ -196,7 +201,7 @@ const setMoveButtonsState = function (enabled) {
   });
 };
 
-// End battle and show result screen
+//! End battle and show result screen
 const endBattle = function (result) {
   // transition to result screen
   resultScreen.classList.remove("hide");
@@ -204,6 +209,7 @@ const endBattle = function (result) {
   resultMessage.textContent = result === "win" ? "You Win!" : "You Lose!";
 };
 
+//! Helper function --> calculate damage
 const calculateDamage = function (attacker, defender, move) {
   // if move has no usage , return 0
   if (move.usage <= 0) return 0;
@@ -223,6 +229,7 @@ const calculateDamage = function (attacker, defender, move) {
   return Math.floor(damage);
 };
 
+//! Apply move
 const applyMove = function (attacker, defender, moveIndex) {
   const move = attacker.moves[moveIndex];
   if (move.usage <= 0) return { damage: 0, move };
@@ -287,7 +294,7 @@ const handleMoveSelection = function (moveIndex) {
   setTimeout(opponentTurn, 3000);
 };
 
-// replay starts from the battle screen with the same selected pokemon
+//** replay starts from the battle screen with the same selected pokemon(reset button functionality)
 const handleReplayButton = function () {
   // Hide result screen, show battle screen
   resultScreen.classList.add("hide");
@@ -308,7 +315,7 @@ const handleReplayButton = function () {
   battleLog.textContent = "";
   setUpBattle(playerPokemon, opponentPokemon);
 };
-// new game starts from the selection screen again
+//**  new game starts from the selection screen again(new game functionality)
 const handleNewGameButton = function () {
   // Hide result and battle screens, show selection screen
   resultScreen.classList.add("hide");

@@ -39,15 +39,20 @@ const pokemonCards = document.querySelectorAll(".pokemon-card");
 const confirmBtn = document.querySelector(".btn.confirm");
 const cancelBtn = document.querySelector(".btn.cancel");
 
-const playerCard = document.querySelector(".card.player");
-const opponentCard = document.querySelector(".card.opponent");
-
+const playerName = document.querySelector(".card.player .name");
+const playerSprite = document.querySelector(".card.player .pokemon-sprite img");
 const playerHpFill = document.querySelector(".card.player .hp-fill");
-const opponentHpFill = document.querySelector(".card.opponent .hp-fill");
 const playerHpText = document.querySelector(".card.player .hp-text");
+
+const opponentName = document.querySelector(".card.opponent .name");
+const opponentSprite = document.querySelector(
+  ".card.opponent .pokemon-sprite img"
+);
+const opponentHpFill = document.querySelector(".card.opponent .hp-fill");
 const opponentHpText = document.querySelector(".card.opponent .hp-text");
 
 const moveButtons = document.querySelectorAll(".moves .move");
+
 const battleLog = document.querySelector(".panel .log");
 
 const resultMessage = document.querySelector(".result-message p");
@@ -55,8 +60,6 @@ const replayBtn = document.querySelector(".result-actions .replay");
 const newGameBtn = document.querySelector(".result-actions .new-game");
 
 /*-------------------------------- Functions --------------------------------*/
-
-// core game logic -- works on the console
 
 //A deep copy of an object is a copy whose properties do not share the same references
 // (point to the same underlying values) as those of the source object from which the copy was made.
@@ -69,7 +72,7 @@ const createPokemon = function (pokemon) {
 };
 
 const handlePokemonSelection = function (event) {
-  // select the card
+  // select the pokemon card you attached the listener to
   const selectedCard = event.currentTarget;
 
   // remove previous selection --> ensures you cannot select multiple pokemon
@@ -100,22 +103,23 @@ const handleConfirmSelection = function () {
   // select the current pokemon card and stores its name
   const selectedPokemonName =
     selectedPokemonCard.querySelector(".name").textContent;
-  console.log(selectedPokemonName);
+
+  // update state of player pokemon to selected pokemon
   if (selectionPhase === "player") {
     playerPokemon = createPokemon(pokemonLookup[selectedPokemonName]);
-    console.log(playerPokemon);
     selectionTitle.textContent = "Select Opponent Pokémon";
     selectionPhase = "opponent";
-
     // clear selection after confirming
     selectedPokemonCard.classList.remove("selected");
     selectedPokemonCard = null;
   } else if (selectionPhase === "opponent") {
+    // update state of opponent pokemon to selected pokemon
     opponentPokemon = createPokemon(pokemonLookup[selectedPokemonName]);
-    console.log(opponentPokemon);
-    // transition the screen back to battle screen
+    // transition the screen to battle screen
     selectionScreen.classList.add("hide");
     battleScreen.classList.remove("hide");
+    // Battle Set up
+    setUpBattle(playerPokemon, opponentPokemon);
   }
 };
 
@@ -152,6 +156,27 @@ const logStatus = function () {
   );
 };
 
+const setUpBattle = function (playerPokemon, opponentPokemon) {
+  // player
+  playerName.textContent = playerPokemon.name;
+  playerSprite.src = `./sprites/${playerPokemon.name}.png`;
+  playerHpFill.style.width = "100%";
+  playerHpText.textContent = `${playerPokemon.hp} / ${playerPokemon.hp}`;
+  // opponent
+  opponentName.textContent = opponentPokemon.name;
+  opponentSprite.src = `./sprites/${opponentPokemon.name}.png`;
+  opponentHpFill.style.width = "100%";
+  opponentHpText.textContent = `${opponentPokemon.hp} / ${opponentPokemon.hp}`;
+
+  //moves
+  playerPokemon.moves.forEach((move, index) => {
+    const btn = moveButtons[index];
+    btn.textContent = move.name; // set move name
+    btn.disabled = move.usage <= 0; // disable if usage is 0
+    btn.style.opacity = btn.disabled ? 0.5 : 1; // visually indicate disabled moves
+  });
+};
+
 /*----------------------------- Event Listeners -----------------------------*/
 
 for (let i = 0; i < pokemonCards.length; i++) {
@@ -160,7 +185,7 @@ for (let i = 0; i < pokemonCards.length; i++) {
 confirmBtn.addEventListener("click", handleConfirmSelection);
 cancelBtn.addEventListener("click", handleCancelSelection);
 
-/*------------------------------ Game setup and battle loop -----------------*/
+/*------------------------------  battle logic -----------------*/
 
 // // Decide who goes first
 // playerTurn = playerPokemon.speed >= opponentPokemon.speed;
@@ -205,7 +230,5 @@ cancelBtn.addEventListener("click", handleCancelSelection);
 //todo -->  Show battle log messages for each move. Update UI dynamically
 // todo -->  Show a “disabled” state for moves with usage <= 0. Update UI dynamically
 // todo --> trigger a result screen when either Pokémon HP ≤ 0. Determine win / loss
-
-//todo --> edge cases : all 4 moves has zero usage left
-
-//! defensive coding (error handling)
+//todo --> replay button functionality
+// todo --> new game button functionality

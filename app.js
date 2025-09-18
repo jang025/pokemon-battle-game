@@ -25,9 +25,9 @@ const pokemonLookup = {
 
 let playerPokemon;
 let opponentPokemon;
-let playerTurn;
 let selectedPokemonCard = null;
 let selectionPhase = "player";
+let playerTurn;
 
 /*------------------------ Cached Element References ------------------------*/
 const selectionScreen = document.querySelector(".selection-screen");
@@ -50,12 +50,10 @@ const opponentSprite = document.querySelector(
 );
 const opponentHpFill = document.querySelector(".card.opponent .hp-fill");
 const opponentHpText = document.querySelector(".card.opponent .hp-text");
-
 const moveButtons = document.querySelectorAll(".moves .move");
+const battleLog = document.querySelector(".battle-log");
 
-const battleLog = document.querySelector(".panel .log");
-
-const resultMessage = document.querySelector(".result-message p");
+const resultMessage = document.querySelector(".result-message");
 const replayBtn = document.querySelector(".result-actions .replay");
 const newGameBtn = document.querySelector(".result-actions .new-game");
 
@@ -63,16 +61,14 @@ const newGameBtn = document.querySelector(".result-actions .new-game");
 
 //A deep copy of an object is a copy whose properties do not share the same references
 // (point to the same underlying values) as those of the source object from which the copy was made.
-
 // structuredClone --> deep clone of the pokemon object
-
 // This clone is a deep copy, so modifying playerPokemon won’t affect the original pokemon object
 const createPokemon = function (pokemon) {
   return structuredClone(pokemon);
 };
 
 const handlePokemonSelection = function (event) {
-  // select the pokemon card you attached the listener to
+  // select the pokemon card you attached the listener to so must use currentTarget
   const selectedCard = event.currentTarget;
 
   // remove previous selection --> ensures you cannot select multiple pokemon
@@ -115,6 +111,10 @@ const handleConfirmSelection = function () {
   } else if (selectionPhase === "opponent") {
     // update state of opponent pokemon to selected pokemon
     opponentPokemon = createPokemon(pokemonLookup[selectedPokemonName]);
+
+    // store max HP for both Pokémon
+    playerPokemon.maxHp = playerPokemon.hp;
+    opponentPokemon.maxHp = opponentPokemon.hp;
     // transition the screen to battle screen
     selectionScreen.classList.add("hide");
     battleScreen.classList.remove("hide");
@@ -123,12 +123,95 @@ const handleConfirmSelection = function () {
   }
 };
 
+//todo start up battle
+const setUpBattle = function (playerPokemon, opponentPokemon) {
+  // Store max HP
+  if (!playerPokemon.maxHp) playerPokemon.maxHp = playerPokemon.hp;
+  if (!opponentPokemon.maxHp) opponentPokemon.maxHp = opponentPokemon.hp;
+  // populate player
+  playerName.textContent = playerPokemon.name;
+  playerSprite.src = `./sprites/${playerPokemon.name}.png`;
+  playerHpFill.style.width = "100%";
+  playerHpText.textContent = `${playerPokemon.hp} / ${playerPokemon.hp}`;
+
+  // populate opponent
+  opponentName.textContent = opponentPokemon.name;
+  opponentSprite.src = `./sprites/${opponentPokemon.name}.png`;
+  opponentHpFill.style.width = "100%";
+  opponentHpText.textContent = `${opponentPokemon.hp} / ${opponentPokemon.hp}`;
+
+  //populate moves
+  playerPokemon.moves.forEach((move, index) => {
+    const btn = moveButtons[index];
+    btn.textContent = move.name; // set move name
+    btn.disabled = move.usage <= 0; // disable if usage is 0
+    btn.style.opacity = btn.disabled ? 0.5 : 1; // visually indicate disabled moves
+    // Store max usage
+    if (move.maxUsage === undefined) move.maxUsage = move.usage;
+  });
+
+  // Reset battle log
+  battleLog.textContent = "";
+
+  // set turn based on speed
+  playerTurn = playerPokemon.speed >= opponentPokemon.speed;
+  addBattleLog(
+    playerTurn
+      ? `${playerPokemon.name} is faster! You go first!`
+      : `${opponentPokemon.name} is faster! Opponent goes first!`
+  );
+  // disable moves if opp turn || enable moves if player turn
+  setMoveButtonsState(playerTurn);
+
+  // opponent turn (delay of 3s)
+  if (!playerTurn) setTimeout(opponentTurn, 3000);
+};
+
+// Add message to battle log
+const addBattleLog = function (msg) {
+  const p = document.createElement("p");
+  p.textContent = msg;
+  battleLog.appendChild(p);
+  battleLog.scrollTop = battleLog.scrollHeight;
+};
+
+// Update HP bars dynamically
+const updateHpBars = function () {
+  playerHpFill.style.width = `${
+    (playerPokemon.hp / playerPokemon.maxHp) * 100
+  }%`;
+  playerHpText.textContent = `${playerPokemon.hp} / ${playerPokemon.maxHp}`;
+
+  opponentHpFill.style.width = `${
+    (opponentPokemon.hp / opponentPokemon.maxHp) * 100
+  }%`;
+  opponentHpText.textContent = `${opponentPokemon.hp} / ${opponentPokemon.maxHp}`;
+};
+
+// Enable/disable move buttons
+const setMoveButtonsState = function (enabled) {
+  moveButtons.forEach((btn, i) => {
+    btn.disabled = playerPokemon.moves[i].usage <= 0;
+    btn.style.opacity = !enabled || btn.disabled ? 0.5 : 1;
+  });
+};
+
+// End battle and show result screen
+const endBattle = function (result) {
+  // transition to result screen
+  resultScreen.classList.remove("hide");
+  battleScreen.classList.add("hide");
+  resultMessage.textContent = result === "win" ? "You Win!" : "You Lose!";
+};
+
 const calculateDamage = function (attacker, defender, move) {
   // if move has no usage , return 0
   if (move.usage <= 0) return 0;
   // miss hits
-  if (Math.random() > move.accuracy) return 0;
-
+  if (Math.random() > move.accuracy) {
+    addBattleLog(`${attacker.name}'s ${move.name} missed!`);
+    return 0;
+  }
   //  formula : damage =  power + attack - defence
   let damage = move.power + attacker.attack - defender.defense;
   if (damage < 0) damage = 0; // prevent negative damage
@@ -144,37 +227,103 @@ const applyMove = function (attacker, defender, moveIndex) {
   const move = attacker.moves[moveIndex];
   if (move.usage <= 0) return { damage: 0, move };
   const damage = calculateDamage(attacker, defender, move);
-
-  defender.hp -= damage;
+  // ensure no negative hp
+  defender.hp = Math.max(defender.hp - damage, 0);
   move.usage -= 1;
   return { damage, move };
 };
 
-const logStatus = function () {
-  console.log(
-    `Player HP: ${playerPokemon.hp}, Opponent HP: ${opponentPokemon.hp}`
+//todo opponent move
+const opponentTurn = function () {
+  // check if the move is available
+  const moveIndex = Math.floor(Math.random() * opponentPokemon.moves.length);
+  const { damage, move } = applyMove(opponentPokemon, playerPokemon, moveIndex);
+
+  updateHpBars();
+  addBattleLog(
+    `${opponentPokemon.name} used ${move.name}! It dealt ${damage} damage.`
   );
+
+  if (playerPokemon.hp <= 0) {
+    endBattle("lose");
+    return;
+  }
+  // switch turns
+  playerTurn = true;
+  setMoveButtonsState(playerTurn);
 };
 
-const setUpBattle = function (playerPokemon, opponentPokemon) {
-  // player
-  playerName.textContent = playerPokemon.name;
-  playerSprite.src = `./sprites/${playerPokemon.name}.png`;
-  playerHpFill.style.width = "100%";
-  playerHpText.textContent = `${playerPokemon.hp} / ${playerPokemon.hp}`;
-  // opponent
-  opponentName.textContent = opponentPokemon.name;
-  opponentSprite.src = `./sprites/${opponentPokemon.name}.png`;
-  opponentHpFill.style.width = "100%";
-  opponentHpText.textContent = `${opponentPokemon.hp} / ${opponentPokemon.hp}`;
+//todo player's move
+const handleMoveSelection = function (moveIndex) {
+  if (!playerTurn) return;
 
-  //moves
-  playerPokemon.moves.forEach((move, index) => {
-    const btn = moveButtons[index];
-    btn.textContent = move.name; // set move name
-    btn.disabled = move.usage <= 0; // disable if usage is 0
-    btn.style.opacity = btn.disabled ? 0.5 : 1; // visually indicate disabled moves
-  });
+  const move = playerPokemon.moves[moveIndex];
+  if (move.usage <= 0) {
+    addBattleLog(
+      `${playerPokemon.name} tried to use ${move.name}, but it has no usage left!`
+    );
+    return;
+  }
+
+  const { damage, move: usedMove } = applyMove(
+    playerPokemon,
+    opponentPokemon,
+    moveIndex
+  );
+  updateHpBars();
+  addBattleLog(
+    `${playerPokemon.name} used ${usedMove.name}! It dealt ${damage} damage.`
+  );
+
+  if (opponentPokemon.hp <= 0) {
+    endBattle("win");
+    return;
+  }
+
+  // Switch turns
+  playerTurn = false;
+  setMoveButtonsState(playerTurn);
+  // 3s delay
+  setTimeout(opponentTurn, 3000);
+};
+
+// replay starts from the battle screen with the same selected pokemon
+const handleReplayButton = function () {
+  // Hide result screen, show battle screen
+  resultScreen.classList.add("hide");
+  battleScreen.classList.remove("hide");
+
+  // Reset Pokémon HP
+  playerPokemon.hp = playerPokemon.maxHp;
+  opponentPokemon.hp = opponentPokemon.maxHp;
+
+  // Reset moves usage
+  playerPokemon.moves.forEach((move) => (move.usage = move.maxUsage));
+  opponentPokemon.moves.forEach((move) => (move.usage = move.maxUsage));
+
+  // Reset player turn based on speed
+  playerTurn = playerPokemon.speed >= opponentPokemon.speed;
+
+  // Reset UI
+  battleLog.textContent = "";
+  setUpBattle(playerPokemon, opponentPokemon);
+};
+// new game starts from the selection screen again
+const handleNewGameButton = function () {
+  // Hide result and battle screens, show selection screen
+  resultScreen.classList.add("hide");
+  battleScreen.classList.add("hide");
+  selectionScreen.classList.remove("hide");
+
+  // Reset selection phase and selected Pokémon
+  selectionPhase = "player";
+  selectedPokemonCard = null;
+  playerPokemon = null;
+  opponentPokemon = null;
+  battleLog.textContent = "";
+  selectionTitle.textContent = "Select Your Pokémon";
+  // Clear any previous selection
+  pokemonCards.forEach((card) => card.classList.remove("selected"));
 };
 
 /*----------------------------- Event Listeners -----------------------------*/
@@ -185,50 +334,11 @@ for (let i = 0; i < pokemonCards.length; i++) {
 confirmBtn.addEventListener("click", handleConfirmSelection);
 cancelBtn.addEventListener("click", handleCancelSelection);
 
-/*------------------------------  battle logic -----------------*/
+for (let i = 0; i < moveButtons.length; i++) {
+  moveButtons[i].addEventListener("click", () => {
+    handleMoveSelection(i);
+  });
+}
 
-// // Decide who goes first
-// playerTurn = playerPokemon.speed >= opponentPokemon.speed;
-// console.log(playerTurn);
-
-// console.log(`Player chose ${playerPokemon.name}!`);
-// console.log(`Opponent chose ${opponentPokemon.name}!`);
-// console.log(playerTurn ? "Player goes first!" : "Opponent goes first!");
-
-// // Main battle loop
-// while (playerPokemon.hp > 0 && opponentPokemon.hp > 0) {
-//   if (playerTurn) {
-//     // hard code the first move for now
-//     const { damage, move } = applyMove(playerPokemon, opponentPokemon, 0);
-//     console.log(`Player used : ${move.name} and damage dealt : ${damage}`);
-//   } else {
-//     const { damage, move } = applyMove(opponentPokemon, playerPokemon, 0);
-//     console.log(`Opponent used : ${move.name} and damage dealt : ${damage}`);
-//   }
-
-//   // battle logs
-//   logStatus();
-
-//   // switch turns
-//   playerTurn = !playerTurn;
-// }
-
-// // battle outcome
-// if (playerPokemon.hp > 0) {
-//   console.log("Player wins!");
-// } else {
-//   console.log("Opponent wins!");
-// }
-
-//! things to do next
-
-//todo --> let the player pick a Pokémon instead of hardcoding it.(build UI for pokemon selection)
-//todo --> Show HP bars, Pokémon names,Pokemon sprite (image) and move buttons dynamically in the UI (display battle screen)
-//todo --> Allow the player to click a move instead of hardcoding the first move . (implement interactive move selection )
-//todo --> Randomly pick a move with remaining usage for the opponent (implmenet opponent AI )
-//todo --> Update HP bars and text after each move. Update UI dynamicaly
-//todo -->  Show battle log messages for each move. Update UI dynamically
-// todo -->  Show a “disabled” state for moves with usage <= 0. Update UI dynamically
-// todo --> trigger a result screen when either Pokémon HP ≤ 0. Determine win / loss
-//todo --> replay button functionality
-// todo --> new game button functionality
+replayBtn.addEventListener("click", handleReplayButton);
+newGameBtn.addEventListener("click", handleNewGameButton);

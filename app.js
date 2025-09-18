@@ -127,7 +127,7 @@ const handleConfirmSelection = function () {
   }
 };
 
-//todo start up battle after pressing the confirm button
+//todo --> start up battle after pressing the confirm button
 const setUpBattle = function (playerPokemon, opponentPokemon) {
   // Store max HP
   if (!playerPokemon.maxHp) playerPokemon.maxHp = playerPokemon.hp;
@@ -171,7 +171,7 @@ const setUpBattle = function (playerPokemon, opponentPokemon) {
   if (!playerTurn) setTimeout(opponentTurn, 3000);
 };
 
-//! utility function -->  Add message to battle logs
+//! utility/Helper  function -->  Add message to battle logs
 const addBattleLog = function (msg) {
   const p = document.createElement("p");
   p.textContent = msg;
@@ -240,7 +240,7 @@ const applyMove = function (attacker, defender, moveIndex) {
   return { damage, move };
 };
 
-//todo opponent move
+//todo opponent move --> opponent AI functionality
 const opponentTurn = function () {
   // check if the move is available
   const moveIndex = Math.floor(Math.random() * opponentPokemon.moves.length);
@@ -260,7 +260,7 @@ const opponentTurn = function () {
   setMoveButtonsState(playerTurn);
 };
 
-//todo player's move
+//todo player's move. --> move button functionality
 const handleMoveSelection = function (moveIndex) {
   if (!playerTurn) return;
 
